@@ -24,14 +24,14 @@ print_r($count);
             mines: 10,
             isLose: false,
             isWin: false,
-
+        
             init() {
                 this.isLose = false;
                 this.isWin = false;
                 this.hideModal();
                 this.generateField();
             },
-
+        
             generateField() {
                 this.field = [];
                 for (let y = 0; y < this.height; y++) {
@@ -48,7 +48,7 @@ print_r($count);
                         };
                     }
                 }
-
+        
                 for (let i = 0; i < this.mines; i++) {
                     let x, y;
                     do {
@@ -58,7 +58,7 @@ print_r($count);
                     this.field[y][x].value = 'B';
                     this.field[y][x].uncovered = false;
                 }
-
+        
                 for (let y = 0; y < this.height; y++) {
                     for (let x = 0; x < this.width; x++) {
                         if (this.field[y][x].value !== 'B') {
@@ -79,7 +79,7 @@ print_r($count);
                     }
                 }
             },
-
+        
             getCellText(cell) {
                 if (cell.uncovered) {
                     return cell.value === 'B' ? '💣' : cell.value === 0 ? '' : cell.value;
@@ -89,12 +89,12 @@ print_r($count);
                     return '';
                 }
             },
-
+        
             uncoverCell(cell) {
                 if (cell.flagged || this.isWin || this.isLose) {
                     return;
                 }
-
+        
                 if (cell.value === 'B') {
                     {{-- alert('Game over!'); --}}
                     this.setLose();
@@ -104,15 +104,15 @@ print_r($count);
                         this.uncoverNeighbours(cell.x, cell.y);
                     }
                 }
-
+        
                 let uncoveredCells = this.field.flat().filter((cell) => cell.uncovered && cell.value !== 'B').length;
                 let allCells = this.width * this.height - this.mines;
-
+        
                 if (uncoveredCells === allCells) {
                     this.setWin();
                 }
             },
-
+        
             uncoverNeighbours(x, y) {
                 const neighbours = this.getNeighbouringCoords(x, y);
                 neighbours.forEach(([x, y]) => {
@@ -121,7 +121,7 @@ print_r($count);
                     }
                 });
             },
-
+        
             getNeighbouringCoords(x, y) {
                 const neighbours = [];
                 for (let dy = -1; dy <= 1; dy++) {
@@ -136,15 +136,19 @@ print_r($count);
                 }
                 return neighbours;
             },
-
+        
             flagCell(cell) {
+                if (cell.uncovered) {
+                    return;
+                }
+        
                 cell.flagged = !cell.flagged;
                 let flaggedMines = this.field.flat().filter((cell) => cell.value === 'B' && cell.flagged).length;
                 {{-- if (flaggedMines === this.mines) {
                     this.setWin();
                 } --}}
             },
-
+        
             toggleMines() {
                 let mines = this.field.flat().find((cell, index) => {
                     if (cell.value !== 'B') {
@@ -159,12 +163,12 @@ print_r($count);
                     };
                 });
             },
-
+        
             laughConfetti() {
                 function randomInRange(min, max) {
                     return Math.random() * (max - min) + min;
                 }
-
+        
                 var count = 200;
                 var scalar = 2;
                 var emoji = confetti.shapeFromText({ text: '😂', scalar });
@@ -173,7 +177,7 @@ print_r($count);
                     shapes: [emoji],
                     zIndex: 999,
                 };
-
+        
                 function fire(particleRatio, opts) {
                     confetti({
                         ...defaults,
@@ -181,7 +185,7 @@ print_r($count);
                         particleCount: Math.floor(count * particleRatio)
                     });
                 }
-
+        
                 fire(0.25, {
                     spread: 26,
                     startVelocity: 55,
@@ -209,19 +213,19 @@ print_r($count);
                     scalar: 4
                 });
             },
-
+        
             normalConfetti() {
                 function randomInRange(min, max) {
                     return Math.random() * (max - min) + min;
                 }
-
+        
                 var count = 200;
                 var scalar = 2;
                 var defaults = {
                     origin: { y: 0.85 },
                     zIndex: 999,
                 };
-
+        
                 function fire(particleRatio, opts) {
                     confetti({
                         ...defaults,
@@ -229,7 +233,7 @@ print_r($count);
                         particleCount: Math.floor(count * particleRatio)
                     });
                 }
-
+        
                 fire(0.25, {
                     spread: 26,
                     startVelocity: 55,
@@ -253,28 +257,28 @@ print_r($count);
                     startVelocity: 45,
                 });
             },
-
+        
             showModal() {
                 $wire.myModal2 = true;
             },
-
+        
             hideModal() {
                 $wire.myModal2 = false;
             },
-
+        
             setLose() {
                 this.isLose = true;
                 this.showModal();
                 this.laughConfetti();
                 this.toggleMines();
             },
-
+        
             setWin() {
                 this.isWin = true;
                 this.showModal();
                 this.normalConfetti();
             }
-
+        
         }" x-init="">
             <x-header title="Minesweeper" size="text-3xl text-primary">
                 <x-slot:actions>

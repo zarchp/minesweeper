@@ -19,5 +19,6 @@
         "@alpinejs/sort": "^3.13.10",
         "alpinejs-swipe": "^1.0.2",
         "canvas-confetti": "^1.9.3"
-    }
+    },
+    "packageManager": "pnpm@8.12.0+sha1.7134f9b8d0b70bc7a1954f47af52123cd2b2acce"
 }
